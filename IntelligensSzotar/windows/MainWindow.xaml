@@ -1,0 +1,232 @@
+﻿<Window x:Class="IntelligensSzotar.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{DynamicResource main_title}" Height="420" MinHeight="420"  Width="600" MinWidth="600" Icon="/img/dictionary.png" ContentRendered="Window_ContentRendered" Closing="Window_Closing">
+    <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top">
+            <Menu Name="menu" Height="27">
+                <MenuItem Header="_Szótár">
+                    <MenuItem Header="Új téma felvétele" Click="btn_newTopic_Click">
+                        <MenuItem.Icon>
+                            <Image Width="25" Source="/img/addtopic.png"></Image>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Szavak felvétele" Click="btn_addWords_Click">
+                        <MenuItem.Icon>
+                            <Image Width="25" Source="/img/addword.png"></Image>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="_Beállítások">
+                    <MenuItem Header="_Megjelenítés nyelve">
+                        <MenuItem Name="menu_lang_hungarian" Header="Magyar" Click="menu_lang_hungarian_Click">
+                            <MenuItem.Icon>
+                                <Image Source="/img/flags/hung_flag.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Name="menu_lang_english" Header="Angol"  Click="menu_lang_english_Click">
+                            <MenuItem.Icon>
+                                <Image Source="/img/flags/uk_flag.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="_Információ"></MenuItem>
+            </Menu>
+            <ToolBar Name="toolbar" Height="32">
+                <Button Name="btn_newTopic" ToolTip="Új téma felvétele" Click="btn_newTopic_Click">
+                    <Image Source="/img/addtopic.png"></Image>
+                </Button>
+                <Button Name="btn_addWords" ToolTip="Szavak felvétele egy megadott témában" Click="btn_addWords_Click">
+                    <Image Source="/img/addword.png"></Image>
+                </Button>
+
+                <Label>Szó keresése:</Label>
+                <TextBox Name="textb_findWord" Width="150" Background="#FFB9B9F8" TextChanged="textb_findWord_TextChanged"></TextBox>
+            </ToolBar>
+
+            <Border Name="loadingwords" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="15" Background="#FF02A702" Margin="0,20, 0,0" Visibility="Collapsed" >
+                <StackPanel  Margin="12,7,12,8">
+
+                    <Label HorizontalAlignment="Center" Foreground="White" FontWeight="Bold">Szavak betöltése...</Label>
+                    <ProgressBar Name="progbar_loadingwords" Width="250" Height="25"></ProgressBar>
+                </StackPanel>
+            </Border>
+
+            <Border Name="border_found" CornerRadius="15" Background="#FFA0F5A0">
+                <DataGrid Name="dgrid_found" Visibility="Collapsed" Margin="10,10,10,10" VerticalScrollBarVisibility="Visible" MaxHeight="230"></DataGrid>
+            </Border>
+        </StackPanel>
+        <TabControl Background="AliceBlue">
+            <TabItem Background="AliceBlue" Header="Felvett témák" ToolTip="A betöltött témákat és a hozzájuk tartozó adatokat jeleníti meg, az adatbázisban tárolt statikus formában.">
+                <Border Name="border_stat" CornerRadius="15" Background="#FFF3FFFF" Margin="0,5,0,5" Visibility="Visible">
+                    <DataGrid Name="dgrid_stat"   Background="#FFF3FFFF" IsReadOnly="True" Margin="10,10,10,10" AutoGenerateColumns="False" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Téma címe" Binding="{Binding TopicTitle}" />
+                            <DataGridTextColumn Header="Első nyelv" Binding="{Binding StaticLanguage1}" />
+                            <DataGridTextColumn Header="Második nyelv" Binding="{Binding StaticLanguage2}" />
+                            <DataGridTextColumn Header="Nyelv 1 szavak száma" Binding="{Binding StaticLang1Count}" />
+                            <DataGridTextColumn Header="Nyelv 2 szavak száma" Binding="{Binding StaticLang2Count}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+
+            </TabItem>
+
+            <TabItem Header="Felvett szavak" ToolTip="Ezen a panelen az összes felvett szó megtekinthető és manipulálható, törölhető" >
+                <DockPanel LastChildFill="True">
+                    <ToolBar Height="30" DockPanel.Dock="Top">
+                        <Label Content="Válassz témát:"></Label>
+                        <ComboBox Name="combo_topicsOfWords" SelectionChanged="combo_topicsOfWords_SelectionChanged"></ComboBox>
+                        <Separator Margin="5,2,3,0" />
+                        <Button Name="btn_deleteWord" IsEnabled="False" Click="btn_deleteWord_Click" ToolTip="Válassz ki egy szót egy témában a törléshez. Ha ez a szó egy másik jelentése volt, törlődik annak a szónak a jelentései közül">
+                            <Image Source="/img/delword.png" />
+                        </Button>
+                        <Button Name="btn_modifyWord" IsEnabled="False"  Click="btn_modifyWord_Click" ToolTip="Válassz ki egy szót egy témában a módosításhoz.">
+                            <Image Source="/img/modword.png" />
+                        </Button>
+                    </ToolBar>
+                    <Border Name="border_words" CornerRadius="15" Background="#FFF3FFFF" Margin="0,5,0,5" Visibility="Visible" >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Label Name="label_firstLang" Content="Első nyelv szavai:" VerticalAlignment="Center" Margin="10,0,0,0"></Label>
+                            <Label Name="label_secondLang" Content="Második nyelv szavai:" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0"></Label>
+                            <DataGrid Name="dgrid_words1" Grid.Column="0" Grid.Row="1" Background="#FFF3FFFF" IsReadOnly="True" Margin="10,0,10,10" AutoGenerateColumns="False" SelectionChanged="dgrid_words1_SelectionChanged" CanUserResizeRows="False" HeadersVisibility="Column" IsTextSearchEnabled="True" PreviewKeyDown="DataGrid_Words_KeyDown" CanUserDeleteRows="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Szó" Binding="{Binding WordName}" />                                    
+                                    <DataGridTextColumn Header="Jelentések" Binding="{Binding MeaningManifest}" Width="*" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <DataGrid Name="dgrid_words2" Grid.Column="1" Grid.Row="1"  Background="#FFF3FFFF" IsReadOnly="True" Margin="10,0,10,10" AutoGenerateColumns="False" SelectionChanged="dgrid_words2_SelectionChanged" CanUserResizeRows="False" HeadersVisibility="Column" IsTextSearchEnabled="True" PreviewKeyDown="DataGrid_Words_KeyDown" CanUserDeleteRows="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Szó" Binding="{Binding WordName}" />                                    
+                                    <DataGridTextColumn Header="Jelentések" Binding="{Binding MeaningManifest}" Width="*" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </Border>
+                </DockPanel>
+            </TabItem>
+
+            <TabItem Header="Szavak kikérdezése" Background="AliceBlue">
+                <DockPanel Name="dock_questions" Background="#FFF3FFFF" Visibility="Visible" >
+
+                    <Border Background="#FF9CEF9C" CornerRadius="5">
+                        <Expander Name="exp_topics" ExpandDirection="Left" Header="Témák">
+                            <DockPanel LastChildFill="True">
+
+                                <StackPanel DockPanel.Dock="Bottom">
+                                    <Button Name="btn_switchChosenLang" Margin="6,6,6,6"  Height="23" Width="Auto" Click="btn_switchChosenLang_Click">Nyelvek felcserélése</Button>
+                                </StackPanel>
+
+
+                                <ListBox Name="list_topics" Width="Auto" SelectionMode="Multiple" VerticalAlignment="Stretch"></ListBox>
+
+                            </DockPanel>
+                        </Expander>
+                    </Border>
+
+                    <Grid DockPanel.Dock="Top" Visibility="Visible">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="35" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
+
+                            <Button Name="btn_start" Width="100" Height="25" Margin="10,0,10,0" Click="btn_start_Click">Start</Button>
+
+                            <Button Name="btn_prevQuestion"   Margin="3,3,3,3" Click="btn_prevQuestion_Click" ToolTip="Előző kérdés" IsEnabled="False">
+                                <Image Source="/img/arrowprev.png" />
+                            </Button>
+
+                            <Label Height="25">Kiválasztott szavak:</Label>
+
+                            <Label Name="label_wordIndex" Height="34" FontSize="16" Margin="0,0,-5,0" Foreground="Blue" FontWeight="ExtraBold">0</Label>
+
+                            <Label Height="34" FontSize="16">/</Label>
+
+                            <Label Name="label_wordCount" Height="34" FontSize="16" Margin="-5,0,5,0">0</Label>
+
+                            <Button Name="btn_nextQuestion" IsEnabled="False"  Click="btn_nextQuestion_Click" Margin="3,3,3,3" ToolTip="Következő kérdés">
+                                <Image Source="/img/arrownext.png" />
+                            </Button>
+
+                        </StackPanel>
+
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="65" />
+                                <RowDefinition Height="70" />
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="40" />
+                            </Grid.RowDefinitions>
+
+                            <Border Height="45" HorizontalAlignment="Right" Width="70" Background="#FF9CEF9C" Margin="0,0,20,0" CornerRadius="5">
+                                <Image Width="25" Source="/img/speaker.png" HorizontalAlignment="Right" Margin="0,0,5,0" MouseDown="Image_MouseDown" ToolTip="Szó felolvasása" />
+                            </Border>
+                            <Border Background="AliceBlue" CornerRadius="20" Margin="20,5,55,5" Height="45" >
+                                <Label Name="label_nextWord" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="17" FontWeight="Heavy"></Label>
+                            </Border>
+
+                            <Image Source="/img/arrow.png" Grid.Row="1" Margin="0,3,0,3">
+                            </Image>
+
+                            <TextBox Name="textb_answer" Grid.Row="2" Background="LightBlue" Margin="20,5,20,0" TextAlignment="Left" FontSize="17" VerticalAlignment="Center" KeyDown="textb_answer_KeyDown"></TextBox>
+
+                            <StackPanel Grid.Row="3" Margin="20,0,20,5" Orientation="Horizontal">
+                                <Image Name="btn_speech" Source="/img/micro_off.png" Width="30" HorizontalAlignment="Left" ToolTip="Beszédfelismerés" MouseDown="btn_speech_MouseDown" />
+                                <StackPanel Name="stack_speech" Orientation="Horizontal" Visibility="Collapsed"  >
+                                    <ComboBox Name="combo_speech" Height="25" Width="70" Margin="10,0,10,0" SelectionChanged="combo_speech_SelectionChanged" ToolTip="Válasszon nyelvet a beszédfelismeréshez!"  />
+                                    <ProgressBar Name="progbar_audio" Height="25" Width="100" ToolTip="Ha nem észlel változást a hangszintben, ide kattintva állíthat be másik alapértelmezett hangfelvételi eszközt. Beállítás után kapcsolja ki és be a beszédfelismerést!" MouseDown="progbar_audio_MouseDown" />
+                                </StackPanel>
+                            </StackPanel>
+
+                            <Button Name="btn_check" IsEnabled="False" Grid.Column="1" Width="100" Height="30" ToolTip="Beírt szó helyességének ellenőrzése [Enter]" Click="btn_check_Click">Szó ellenőrzése</Button>
+
+                            <Label Name="label_rightAnswer" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Visibility="Hidden">A helyes válasz:</Label>
+
+                            <TextBox Name="textb_rightAnswer" Grid.Row="2" Grid.Column="1" Background="#FF7DF843" Margin="20,5,20,0" TextAlignment="Left" FontSize="17" IsReadOnly="True" VerticalAlignment="Center" Visibility="Collapsed"></TextBox>
+
+                            <Label Name="label_goood" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="18" Visibility="Hidden">Helyes válasz!</Label>
+                        </Grid>
+
+                        <StackPanel HorizontalAlignment="Left" Grid.Column="0" Grid.Row="2" Orientation="Horizontal">
+
+                            <Button Name="btn_statistics" Width="80" Height="25" Margin="10,0,10,0" Click="btn_statistics_Click" IsEnabled="False">Eredmények</Button>
+
+                            <Label Height="25" Margin="10,0,0,0">Jó válaszok:</Label>
+
+                            <Label Name="label_goodAnsw" Margin="0,0,10,0" FontSize="18" VerticalAlignment="Center" Foreground="#FF21AA21" FontWeight="ExtraBold">0</Label>
+
+                            <Label Height="25">Rossz válaszok:</Label>
+
+                            <Label Name="label_wrongAnsw" Margin="0,0,10,0" VerticalAlignment="Center" FontSize="18" Foreground="Red" FontWeight="ExtraBold">0</Label>
+
+                            <Label Height="25">Nem válaszolt:</Label>
+
+                            <Label Name="label_noAnsw" Margin="0,0,20,0" VerticalAlignment="Center" FontSize="18" Foreground="Blue" FontWeight="ExtraBold">0</Label>
+
+                        </StackPanel>
+
+                    </Grid>
+                </DockPanel>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>

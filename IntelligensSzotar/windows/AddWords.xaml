@@ -1,0 +1,63 @@
+﻿<Window x:Class="IntelligensSzotar.AddWords"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Szavak hozzáadása" MinHeight="200" Height="200" Width="400" MinWidth="330" KeyDown="Window_KeyDown" Icon="/img/addword.png">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Height="30">Témák:</Label>
+        <ComboBox Name="combo_topics" Grid.Column="1" Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Center" Height="27" Width="245" SelectionChanged="combo_topics_SelectionChanged" IsTabStop="False"></ComboBox>
+
+        <Grid Name="grid_words" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="28" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="37" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" >
+                <Label Name="label_lang1" VerticalAlignment="Bottom" Margin="5,0,5,0">Nyelv 1:</Label>
+                <Button Name="btn_newMeaning1" Click="btn_newMeaning1_Click"  ToolTip="Új jelentés hozzáfűzése [+ billentyű]" Margin="2" IsTabStop="False">
+                    <Image Source="/img/add.png"  />
+                </Button>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" >
+                <Label Name="label_lang2" VerticalAlignment="Bottom" Margin="5,0,5,0">Nyelv 2:</Label>
+                <Button Name="btn_newMeaning2" Click="btn_newMeaning2_Click"  ToolTip="Új jelentés hozzáfűzése [+ billentyű]" Margin="2" IsTabStop="False">
+                    <Image Source="/img/add.png"  />
+                </Button>
+            </StackPanel>
+
+            <ScrollViewer Name="scroll_words1" Grid.Row="1" Grid.Column="0">
+                <StackPanel Name="stack_words1">
+                    <TextBox  Margin="10,0,15,5"></TextBox>
+                </StackPanel>
+            </ScrollViewer>
+
+            <ScrollViewer Name="scroll_words2" Grid.Row="1" Grid.Column="1">
+                <StackPanel Name="stack_words2">
+                    <TextBox  Margin="10,0,15,5"></TextBox>
+                </StackPanel>
+            </ScrollViewer>
+
+
+
+            <Button Name="btn_addWord" Grid.Row="2" Grid.Column="0"  VerticalAlignment="Center" Margin="5,0,5,0" Width="100" Height="25" ToolTip="Szó hozzáadása a témához [Enter]" Click="btn_addWord_Click" IsTabStop="False">Hozzáad</Button>
+
+            <Button Name="btn_ready" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" Margin="5,0,5,0" Width="100" Height="25" ToolTip="A szavak hozzáadásának befejezése" Click="btn_ready_Click" IsTabStop="False">Kész</Button>
+
+        </Grid>
+    </Grid>
+</Window>

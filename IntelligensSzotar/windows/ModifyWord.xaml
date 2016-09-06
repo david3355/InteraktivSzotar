@@ -1,0 +1,41 @@
+﻿<Window x:Class="IntelligensSzotar.ModifyWord"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Szó módosítása" Height="180" Width="360" Icon="/img/modword.png">
+    <Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="40" />
+            </Grid.RowDefinitions>
+
+            <Label Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Margin="5,0,0,0">Szó:</Label>
+
+            <Label Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Margin="5,0,0,0">Jelentések:</Label>
+
+            <TextBox Name="txt_word" Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="10,0,10,0" Background="#FFE5E5FF"></TextBox>
+
+            <ListBox Name="list_meanings" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Top" Margin="10,0,10,10">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="#FFA2DE9D" CornerRadius="3" Margin="2" >
+                            <StackPanel Orientation="Horizontal" >
+                                <Label FontWeight="Black" Content="{Binding Path=Meaning}"  />
+                                <Image Source="/img/delword.png" Height="20" Margin="2"  MouseUp="DeleteMeaning_click" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <Button Name="btn_save" Grid.Row="2" Width="100" Height="25" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10, 0,0,10" Click="btn_save_Click">Mentés</Button>
+
+
+        </Grid>
+    </Grid>
+</Window>

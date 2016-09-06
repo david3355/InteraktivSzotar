@@ -1,0 +1,16 @@
+﻿<Window x:Class="IntelligensSzotar.Statistics"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Eredények" Height="300" Width="430" Icon="/img/text.png">
+    <DockPanel>
+        <DataGrid Name="dgrid_statistics" LoadingRow="dgrid_statistics_LoadingRow" FontSize="13" FontWeight="Bold" Background="#FFD6ECEF" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Eredmény" Binding="{Binding AnswerResult}" />
+                <DataGridTextColumn Header="Kérdezett szó" Binding="{Binding Word}" />
+                <DataGridTextColumn Header="Válasz" Binding="{Binding Answer}" />
+                <DataGridTextColumn Header="Helyes válasz" Binding="{Binding RightAnswer}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </DockPanel>
+</Window>
